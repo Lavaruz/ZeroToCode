@@ -16,12 +16,7 @@ app.use('/', express.static(path.join(__dirname, 'public')))
 app.use(express.json())
 
 // app.use('/', baseRoutes)
-app.get('/', (req,res)=>{
-    res.render('index',{
-        title: 'Intro',
-        caption: "Hellow this is Assami Muzaki 001"
-    })
-})
+app.use('/', baseRoutes)
 
 app.get('/messages',(req,res)=>{
     res.render('messages',{
