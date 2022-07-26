@@ -26,7 +26,7 @@ app.get('/', (req,res)=>{
 app.get('/messages',(req,res)=>{
     res.render('messages',{
         title:'Messages Site Url',
-        name:'Dodi S'
+        name:'Dodi Suparman'
     })
 })
 
