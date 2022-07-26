@@ -1,0 +1,2 @@
+is javascript synchronous? 
+JS is a synchronous, it has SetTimeout too but it not stricly from javascript, its from node, or if we use browser its come from window which is libuv APIs
