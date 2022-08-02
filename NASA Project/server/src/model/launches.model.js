@@ -29,7 +29,20 @@ function addNewLaunch(launch){
     }))
 }
 
+function getLaunchWithId(launchId){
+    return launches.has(launchId)
+}
+
+function abortLaunchById(launchId){
+    const abort = launches.get(launchId)
+    abort.success = false
+    abort.upcoming = false
+    return abort
+}
+
 module.exports = {
     getAllLaunches,
-    addNewLaunch
+    addNewLaunch,
+    getLaunchWithId,
+    abortLaunchById
 }
