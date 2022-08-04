@@ -1,5 +1,4 @@
-const cluster = require('cluster')
-const os = require('os')
+
 const express = require('express')
 const app = express()
 
@@ -22,15 +21,6 @@ app.get('/timer',(req,res)=>{
 
 
 console.log('run server.js...');
-if (cluster.isMaster){
-    NUM_WORKER = os.cpus().length
-    for (const i of Array(NUM_WORKER).keys()){
-        cluster.fork()
-    }
-    // cluster.fork()
-}else{
-    console.log('run on worker cluster..');
-    app.listen(3000, ()=>{
-        console.log('run on port 3000');
-    })
-}
+app.listen(3000, ()=>{
+    console.log('run on port 3000');
+})
