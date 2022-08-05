@@ -1,3 +1,4 @@
+require('dotenv').config()
 const cors = require('cors')
 const express = require('express')
 const app = express()
@@ -7,8 +8,8 @@ const { planetsRouter } = require('./src/routes/planets/planets.routes')
 const { launchesRouter } = require('./src/routes/launches/launches.router')
 const { loadPlanets } = require('./src/model/planets.model')
 
-DATABASE_CONNECT = `mongodb+srv://Lavaruz:0WHwJQ94frQ2Oy4D@clusternasaproject.qykq0vb.mongodb.net/?retryWrites=true&w=majority`
-
+DATABASE_KEY = process.env.NASA_DATABASE_KEY
+DATABASE_CONNECT = `mongodb+srv://Lavaruz:${DATABASE_KEY}@clusternasaproject.qykq0vb.mongodb.net/?retryWrites=true&w=majority`
 app.use(cors({origin:'http://localhost:3000'}))
 app.use(express.json())
 app.use('/planets' ,planetsRouter)
