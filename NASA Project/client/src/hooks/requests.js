@@ -11,7 +11,7 @@ async function httpGetLaunches() {
   // TODO: Once API is ready.
   // Load launches, sort by flight number, and return as JSON.
   const response = await fetch(`${API_Path}/launches`)
-  const fetching = await response.json()
+  const fetching = response.json()
   return fetching.sort((a,b) =>[
     a.flightNumber - b.flightNumber
   ])
