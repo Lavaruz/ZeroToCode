@@ -24,15 +24,21 @@ async function httpPostLaunch(req,res){
     return res.status(201).json(launch)
 }
 
-function httpDeleteLaunch(req,res){
+async function httpDeleteLaunch(req,res){
     launchId = +req.params.id
 
-    if(!getLaunchWithId(launchId)){
+    const getLaunch = await getLaunchWithId(launchId)
+    if(!getLaunch){
         return res.status(404).json({
             error: 'launch not found !'
         })
     }
-    const abort = abortLaunchById(launchId)
+    const abort = await abortLaunchById(launchId)
+    if (!abort){
+        return res.status(400).json({
+            error: "Delete failed !"
+        })
+    }
     return res.status(200).json(abort)
 }
 

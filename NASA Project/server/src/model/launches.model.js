@@ -53,26 +53,20 @@ async function addNewLaunch(launch){
     saveLaunch(newLaunch)
 }
 
-// console.log(getLatestFlightNumber())
-// async function addNewLaunch(launch){
-    // const latestFlightNumber = await getLatestFlightNumber()
-    // latestflightNumber += 1
-    // launches.set(latestflightNumber, Object.assign(launch,{
-    //     flightNumber: latestflightNumber,
-    //     upcoming: true,
-    //     success: true,
-    //     customer: ['AM Fondation','NASA']
-    // }))
-// }
-function getLaunchWithId(launchId){
-    return launches.has(launchId)
+async function getLaunchWithId(launchId){
+    return await launchesModel.findOne({
+        flightNumber: launchId
+    })
 }
 
-function abortLaunchById(launchId){
-    const abort = launches.get(launchId)
-    abort.success = false
-    abort.upcoming = false
-    return abort
+async function abortLaunchById(launchId){
+    const aborted = await launchesModel.updateOne({
+        flightNumber: launchId
+    },{
+        success: false,
+        upcoming: false
+    })
+    return aborted.modifiedCount === 1
 }
 
 module.exports = {
