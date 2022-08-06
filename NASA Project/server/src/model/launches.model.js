@@ -10,7 +10,7 @@ const launch = {
     rocket: 'Assami IS 18',
     mission: 'Explore 018 Kepler Exo',
     target: 'Kepler-1652 b',
-    customer: ['AM Fondation', 'NASA'],
+    customers: ['AM Fondation', 'NASA'],
     upcoming: true,
     success: true
 }
@@ -48,7 +48,7 @@ async function addNewLaunch(launch){
         flightNumber: latestNumber,
         upcoming: true,
         success: true,
-        customer: ['AM Fondation','NASA']
+        customers: ['AM Fondation','NASA']
     })
     saveLaunch(newLaunch)
 }
