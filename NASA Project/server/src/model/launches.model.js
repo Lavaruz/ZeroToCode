@@ -1,4 +1,5 @@
-const launches = new Map()
+const axios = require('axios')
+
 const launchesModel = require('./launches.mongo')
 const planetsModel = require('./planets.mongo')
 
@@ -16,19 +17,80 @@ const launch = {
 }
 
 // launches.set(launch.flightNumber, launch)
-saveLaunch(launch)
+// saveLaunch(launch)
 
 async function saveLaunch(launch){
-    const planet = await planetsModel.findOne({keplerName: launch.target})
-    if (!planet){
-        throw new Error(`there is no ${launch.target} in the destination list`)
-    }
     await launchesModel.findOneAndUpdate({
         flightNumber: launch.flightNumber
     }, launch,{
         upsert: true
     })
 }
+
+
+// LOAD API
+API_URL = 'https://api.spacexdata.com/v4/launches/query'
+async function populateAPI(){
+    console.log('Downloading API SpaceX');
+    const response = await axios.post(API_URL,{
+        query: {},
+        options: {
+            pagination: false,
+            populate:[
+            {
+                path: 'rocket',
+                select: {
+                    'name': 1
+                }
+            },
+            {
+                path: 'payloads',
+                select: {
+                    'customers': 1
+                }
+            }
+        ]
+        },
+    });
+
+    if (response.status != 200){
+        console.log('Problem on downloading API Launch SpaceX');
+    }
+
+    const launchDocs = response.data.docs
+    for(const launchDoc of launchDocs){
+        const payloads = launchDoc.payloads
+        const customers = payloads.flatMap(payload =>{
+            return payload.customers
+        })
+        const launch = {
+            flightNumber: launchDoc.flight_number,
+            launchDate: launchDoc.date_local,
+            rocket: launchDoc.rocket.name,
+            mission: launchDoc.name,
+            upcoming: launchDoc.upcoming,
+            success: launchDoc.success,
+            customers: customers,
+        }
+        // console.log(`${launch.flightNumber} ${launch.mission}`);
+        await saveLaunch(launch)
+    }
+}
+
+async function loadAPI(){
+    const findAPI = await findLaunch({
+        flightNumber: 1,
+        mission: 'FalconSat'
+    })
+    
+    if (findAPI){
+        console.log('API LOADED !');
+    }else{
+        populateAPI()
+        // console.log('Launch Saved to database!');
+    }
+}
+
 
 async function getAllLaunches(){
     return await launchesModel.find({}, '-_id -__v')
@@ -43,6 +105,10 @@ async function getLatestFlightNumber(){
 }
 
 async function addNewLaunch(launch){
+    const planet = await planetsModel.findOne({keplerName: launch.target})
+    if (!planet){
+        throw new Error(`there is no ${launch.target} in the destination list`)
+    }
     const latestNumber = await getLatestFlightNumber() + 1
     const newLaunch = Object.assign(launch,{
         flightNumber: latestNumber,
@@ -53,8 +119,12 @@ async function addNewLaunch(launch){
     saveLaunch(newLaunch)
 }
 
+async function findLaunch(filter){
+    return await launchesModel.findOne(filter)
+}
+
 async function getLaunchWithId(launchId){
-    return await launchesModel.findOne({
+    return await findLaunch({
         flightNumber: launchId
     })
 }
@@ -73,5 +143,6 @@ module.exports = {
     getAllLaunches,
     addNewLaunch,
     getLaunchWithId,
-    abortLaunchById
+    abortLaunchById,
+    loadAPI
 }
