@@ -10,11 +10,11 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+    res.sendFile(path.join(__dirname, 'public', 'base.html'))
 })
 
 app.get('/secret', (req,res) =>{
-    res.send('This is secret')
+    res.sendFile(path.join(__dirname, 'public', 'secret.html'))
 })
 
 https.createServer({
