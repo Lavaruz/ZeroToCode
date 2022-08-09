@@ -1,2 +1,4 @@
 is javascript synchronous? 
 JS is a synchronous, it has SetTimeout too but it not stricly from javascript, its from node, or if we use browser its come from window which is libuv APIs
+
+STATIC MIDDLEWARE - allow us to use something like image, css or something like that in out html
