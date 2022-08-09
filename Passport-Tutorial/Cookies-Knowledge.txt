@@ -1,0 +1,24 @@
+
+Express-Session = Serverside session
+- only save sessionID
+- session data live in database
+- will be erased if server restarted
+- not shared if we have clusters
+- for secure data
+
+Cookie-Session = Clientside session
+- save session data instead of sessionID
+- not require database
+- stateless so free to use cluster
+- need to be small
+- data visible to the client
+- not for secret data
+
+
+
+Cookies = keep tracking are the user login? if wat to see the secret
+
+cookies.keys == sign client cookies by the server
+!! changing the cookies keys will invalidate all the session
+!! is a good idea to have 2 cookies.key for our session
+!! put cookies.key in dotenv
