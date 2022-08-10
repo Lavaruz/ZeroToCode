@@ -56,10 +56,11 @@ app.get('/auth/google',
 
 app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/' }),
-    function(req, res) {
-    // Successful authentication, redirect home.
+    (req, res) => {
+        // Successful authentication, redirect home.
         res.redirect('/');
-});
+    }
+);
 
 
 
