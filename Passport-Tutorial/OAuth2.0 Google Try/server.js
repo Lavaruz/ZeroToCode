@@ -9,10 +9,13 @@ const path = require('path')
 // SECURITY
 const passport = require('passport')
 const StrategyOAuth = require('passport-google-oauth20').Strategy
+const cookieSession = require('cookie-session')
 
 const config = {
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
+    COOKIE_MAIN_SECRET: process.env.COOKIE_MAIN_SECRET,
+    COOKIE_SECOND_SECRET: process.env.COOKIE_SECOND_SECRET
 }
 
 
@@ -31,6 +34,12 @@ passport.use(new StrategyOAuth(strategyOption, verify))
 
 const app = express()
 app.use(helmet())
+app.use(cookieSession({
+    name: 'cookie',
+    keys: [config.COOKIE_MAIN_SECRET, config.COOKIE_SECOND_SECRET],
+    maxAge: 1000 * 60 * 60 * 24
+}))
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 
@@ -39,7 +48,7 @@ app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/', session: false }),
+    passport.authenticate('google', { failureRedirect: '/' }),
     function(req, res) {
     // Successful authentication, redirect home.
         res.redirect('/');
