@@ -18,7 +18,6 @@ const config = {
     COOKIE_SECOND_SECRET: process.env.COOKIE_SECOND_SECRET
 }
 
-
 const strategyOption = {
     clientID: config.CLIENT_ID,
     clientSecret: config.CLIENT_SECRET,
@@ -31,19 +30,27 @@ function verify(accessToken, refreshToken, profile, done){
 }
 
 passport.use(new StrategyOAuth(strategyOption, verify))
+passport.serializeUser((user, done)=>{
+    done(null, user.id)
+})
+passport.deserializeUser((user,done)=>{
+    done(null, user)
+})
 
 const app = express()
 app.use(helmet())
 app.use(cookieSession({
-    name: 'cookie',
+    name: 'S_LOG_SES',
     keys: [config.COOKIE_MAIN_SECRET, config.COOKIE_SECOND_SECRET],
     maxAge: 1000 * 60 * 60 * 24
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(express.static(path.join(__dirname, 'public')))
 
 
-
+// GOOGLE OAUTH.2.0
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -54,8 +61,11 @@ app.get('/auth/google/callback',
         res.redirect('/');
 });
 
+
+
+
 function checkLogin(req,res,next){
-    isLogin = true
+    isLogin = req.isAuthenticated() && req.user
     if (!isLogin){
         return res.status(401).json({
             error: 'You have to login'
@@ -64,11 +74,12 @@ function checkLogin(req,res,next){
     next()
 }
 
-app.get('/', checkLogin, (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'base.html'))
+    // console.log(req.isAuthenticated());
 })
 
-app.get('/secret', (req,res) =>{
+app.get('/secret',checkLogin, (req,res) =>{
     res.sendFile(path.join(__dirname, 'public', 'secret.html'))
 })
 
