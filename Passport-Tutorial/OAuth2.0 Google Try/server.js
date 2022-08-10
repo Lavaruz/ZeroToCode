@@ -75,13 +75,23 @@ function checkLogin(req,res,next){
     next()
 }
 
+
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'base.html'))
-    // console.log(req.isAuthenticated());
+    if (req.isAuthenticated()){
+        res.sendFile(path.join(__dirname, 'public', 'withAuth.html'))
+    }else{
+        res.sendFile(path.join(__dirname, 'public', 'noAuth.html'))
+    }
+    console.log(req.user);
 })
 
 app.get('/secret',checkLogin, (req,res) =>{
     res.sendFile(path.join(__dirname, 'public', 'secret.html'))
+})
+app.get('/auth/logout', (req,res)=>{
+    req.logout()
+    req.session = null
+    res.redirect('/')
 })
 
 https.createServer({
