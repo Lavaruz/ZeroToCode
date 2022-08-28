@@ -2,3 +2,7 @@ is javascript synchronous?
 JS is a synchronous, it has SetTimeout too but it not stricly from javascript, its from node, or if we use browser its come from window which is libuv APIs
 
 STATIC MIDDLEWARE - allow us to use something like image, css or something like that in out html
+
+EVENT LOOP only has one job, which countinously monitor cb queue and call stack
+- microtask queue same as callback queue but it has higher priority
+- microtask queue will be executed first and cb queue exceuted leter
