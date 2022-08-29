@@ -12,27 +12,8 @@ const schema = makeExecutableSchema({
 })
 
 const root = {
-    products: [
-        {
-            id: 'redShoe',
-            description: 'Red Shoes',
-            price: 100
-        }
-    ],
-    orders: [
-        {
-            date: '20 August 2022',
-            subtotal: 200,
-            items: [
-                {
-                    product: {
-                        id: 'redShoe'
-                    },
-                    quantity: 2
-                }
-            ]
-        }
-    ]
+    products: require('./model/products/products.module'),
+    orders: require('./model/orders/orders.model')
 }
 
 app.use('/graphql', graphqlHTTP({
