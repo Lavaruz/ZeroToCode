@@ -1,8 +1,5 @@
-let arr = "hello-world-grming_mamang".split(/[-_]+/)
-let ass = arr.slice(1).map(a => {
-    if(a !== a[0]){
-        return a.charAt(0).toUpperCase() + a.slice(1) 
-    }
-})
+let arr = [1,2]
+let b = [...arr]
 
-console.log(arr[0]+ass.join(''));
+b[0] = 'Assami'
+console.log(arr);
