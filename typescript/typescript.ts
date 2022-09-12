@@ -1,5 +1,10 @@
-const sum = (a:number, b: number) => {
-    return a + b
+interface studentData {
+    name: string,
+    age: number
 }
-let answer = sum(1, 5)
-console.log(answer);
+
+const students = (info: studentData) => {
+    console.log('student created');
+    
+}
+students({name: 'Assami', age: 18})

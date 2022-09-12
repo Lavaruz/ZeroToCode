@@ -1,5 +1,4 @@
-var sum = function (a, b) {
-    return a + b;
+var students = function (info) {
+    console.log('student created');
 };
-var answer = sum(1, 5);
-console.log(answer);
+students({ name: 'Assami', age: 18 });
